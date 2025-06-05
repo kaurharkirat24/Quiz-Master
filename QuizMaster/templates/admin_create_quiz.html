@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Quiz</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .alert {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        label {
+            font-weight: 500;
+        }
+        input, select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .question {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        button {
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create a New Quiz</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form method="POST" id="quizForm">
+            <label for="title">Quiz Title:</label>
+            <input type="text" id="title" name="title" required>
+
+            <label for="time_limit">Time Limit (seconds):</label>
+            <input type="number" id="time_limit" name="time_limit" value="300" required>
+
+            <label for="question_count">Number of Questions:</label>
+            <input type="number" id="question_count" name="question_count" min="1" value="1" required oninput="generateQuestions()">
+
+            <div id="questionsContainer"></div>
+
+            <button type="submit">Create Quiz</button>
+        </form>
+        <a href="{{ url_for('home') }}">Back to Quiz List</a>
+    </div>
+
+    <script>
+        function generateQuestions() {
+            const questionCount = parseInt(document.getElementById('question_count').value) || 0;
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+
+            for (let i = 1; i <= questionCount; i++) {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <h3>Question ${i}</h3>
+                    <label for="question_${i}">Question Text:</label>
+                    <input type="text" id="question_${i}" name="question_${i}" required>
+
+                    <div class="options">
+                        <label for="option_${i}_1">Option 1:</label>
+                        <input type="text" id="option_${i}_1" name="option_${i}_1" required>
+                        <label for="option_${i}_2">Option 2:</label>
+                        <input type="text" id="option_${i}_2" name="option_${i}_2" required>
+                        <label for="option_${i}_3">Option 3:</label>
+                        <input type="text" id="option_${i}_3" name="option_${i}_3" required>
+                        <label for="option_${i}_4">Option 4:</label>
+                        <input type="text" id="option_${i}_4" name="option_${i}_4" required>
+                    </div>
+
+                    <label for="correct_option_${i}">Correct Option (1-4):</label>
+                    <input type="number" id="correct_option_${i}" name="correct_option_${i}" min="1" max="4" required>
+                `;
+                container.appendChild(questionDiv);
+            }
+        }
+
+        // Generate questions on page load
+        window.onload = generateQuestions;
+    </script>
+</body>
+</html>

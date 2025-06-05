@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}{{ quiz.title }}{% endblock %}
+{% block content %}
+<div class="quiz-container">
+    <h2 class="text-center mb-4">{{ quiz.title }}</h2>
+    <form method="POST" id="quizForm">
+        {% if questions %}
+            {% for question in questions %}
+                <div class="card mb-3 question-card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ loop.index }}. {{ question.text }}</h5>
+                        {% set options = question.options.split(',') %}
+                        {% for i in range(options|length) %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="question_{{ question.id }}" id="question_{{ question.id }}_option_{{ i }}" value="{{ i }}" required>
+                                <label class="form-check-label" for="question_{{ question.id }}_option_{{ i }}">{{ options[i] }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-gradient w-100" id="submitButton">Submit Quiz</button>
+        {% else %}
+            <p class="alert alert-warning">No questions available for this quiz.</p>
+        {% endif %}
+    </form>
+</div>
+<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+<script>
+    document.getElementById('quizForm').addEventListener('submit', function(event) {
+        const questions = document.querySelectorAll('input[type="radio"][name^="question_"]');
+        const questionIds = new Set();
+        questions.forEach(input => {
+            questionIds.add(input.name);
+        });
+        let answered = 0;
+        questionIds.forEach(name => {
+            if (document.querySelector(`input[name="${name}"]:checked`)) {
+                answered++;
+            }
+        });
+        if (answered < questionIds.size) {
+            event.preventDefault();
+            alert('Please answer all questions before submitting.');
+        }
+    });
+</script>
+{% endblock %} 

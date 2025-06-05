@@ -1,0 +1,373 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz List</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+        }
+        .alert {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background-color: #f9f9f9;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        li a.quiz-link {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+        li a.quiz-link:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+        li span.high-score {
+            color: #6c757d;
+            font-size: 0.95em;
+        }
+        .button-group {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 25px;
+            margin: 5px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .button.secondary {
+            background-color: #6c757d;
+        }
+        .button.secondary:hover {
+            background-color: #5a6268;
+        }
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px;
+                padding: 15px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            li {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            li span.high-score {
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Available Quizzes</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <ul>
+        {% for quiz in quizzes %}
+            <li>
+                <a href="{{ url_for('take_quiz', quiz_id=quiz.id) }}" class="quiz-link">{{ quiz.title }}</a>
+                {% if user_high_scores.get(quiz.id|string) %}
+                    <span class="high-score">(High Score: {{ user_high_scores.get(quiz.id|string) }})</span>
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+        <div class="button-group">
+            {% if session.get('is_admin') %}
+                <a href="{{ url_for('create_quiz') }}" class="button">Create New Quiz</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" class="button secondary">Logout</a>
+        </div>
+    </div>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+            position: relative;
+        }
+        h1::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 3px;
+            background-color: #4a90e2;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .alert-success {
+            background-color: #e6fffa;
+            color: #1a4731;
+            border: 1px solid #b5f5ec;
+        }
+        .alert-danger {
+            color: #742a2a;
+            border: 1px solid #fed7d7;
+        }
+        .alert i {
+            font-size: 1.1em;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background-color: #f7fafc;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #185295;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        li a.quiz-link {
+            color: #185295;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        li a.quiz-link:hover {
+            color: #2b6cb0;
+            text-decoration: underline;
+        }
+        li a.quiz-link i {
+            font-size: 1em;
+        }
+        li span.high-score {
+            color: #666;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        li span.high-score i {
+            color: #f6ad55;
+            font-size: 0.95em;
+        }
+        .button-group {
+            text-align: center;
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .button {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background-color: #0e59a9;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+        .button:hover {
+            background-color: #021d3a;
+        }
+        .button.secondary {
+            background-color: #69727c;
+        }
+        .button.secondary:hover {
+            background-color: #36373a;
+        }
+        .button i {
+            font-size: 1em;
+        }
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px 10px;
+                padding: 15px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            li {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+                padding: 12px;
+            }
+            li a.quiz-link {
+                font-size: 1em;
+            }
+            li span.high-score {
+                font-size: 0.9em;
+            }
+            .button {
+                padding: 8px 15px;
+                font-size: 0.95em;
+            }
+        }
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.6em;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+            .button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Available Quizzes</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-circle' }}"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <ul>
+        {% for quiz in quizzes %}
+            <li>
+                <a href="{{ url_for('take_quiz', quiz_id=quiz.id) }}" class="quiz-link">
+                    <i class="fas fa-book-open"></i>
+                    {{ quiz.title }}
+                </a>
+                {% if user_high_scores.get(quiz.id|string) %}
+                    <span class="high-score">
+                        <i class="fas fa-trophy"></i>
+                        High Score: {{ user_high_scores.get(quiz.id|string) }}
+                    </span>
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+        <div class="button-group">
+            {% if session.get('is_admin') %}
+                <a href="{{ url_for('create_quiz') }}" class="button">
+                    <i class="fas fa-plus"></i>
+                    Create New Quiz
+                </a>
+                <a href="{{ url_for('admin_analytics') }}" class="button">
+                    <i class="fas fa-chart-line"></i>
+                    View Analytics
+                </a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" class="button secondary">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .alert {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .alert-success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .alert-danger {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+        p {
+            margin: 5px 0;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quiz Results: {{ quiz.title }}</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <p>Your Score: {{ score }} / {{ total_questions }}</p>
+    <h3>Review:</h3>
+    <ul>
+    {% for question, user_answer in question_answer_pairs %}
+        <li>
+            <p>{{ question.text }}</p>
+            <p>Options: {{ question.options.split(',') }}</p>
+            <p>Your Answer: {{ user_answer }} (Correct Answer: {{ question.correct_option }})</p>
+            {% if user_answer == question.correct_option %}
+                <p style="color: green;">Correct!</p>
+            {% else %}
+                <p style="color: red;">Incorrect</p>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+    <a href="{{ url_for('home') }}">Back to Quiz List</a>
+</body>
+</html>

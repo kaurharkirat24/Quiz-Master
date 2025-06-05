@@ -1,0 +1,99 @@
+body {
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+    font-family: 'Arial', sans-serif;
+}
+
+.navbar {
+    background: linear-gradient(90deg, #16213e, #0f3460);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: background 0.3s ease;
+}
+
+.navbar-brand, .nav-link {
+    color: #e0e0e0 !important;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #00d4ff !important;
+    transform: scale(1.05);
+}
+
+.container {
+    max-width: 900px;
+}
+
+.form-container {
+    background: #16213e;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.quiz-container {
+    padding: 20px;
+}
+
+.btn-gradient {
+    background: linear-gradient(45deg, #00d4ff, #007bff);
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.btn-gradient:hover {
+    background: linear-gradient(45deg, #007bff, #00d4ff);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+}
+
+.quiz-card, .question-card, .result-card {
+    background: #0f3460;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: slideIn 0.5s ease-in-out;
+}
+
+.quiz-card:hover, .question-card:hover, .result-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+.card-title {
+    color: #00d4ff;
+}
+
+.alert-success {
+    background: #1a3c34;
+    color: #00ffab;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.form-check-input:checked {
+    background-color: #00d4ff;
+    border-color: #00d4ff;
+}
+
+.form-check-label {
+    transition: color 0.3s ease;
+}
+
+.form-check-label:hover {
+    color: #00d4ff;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
